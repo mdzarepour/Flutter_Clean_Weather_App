@@ -1,6 +1,7 @@
+import 'package:intl/intl.dart';
 import 'package:weather_app/features/weather/domain/entities/forcast_weather_entity.dart';
 
-class ForcastWeatherModel extends ForcastWeatherEntity {
+class ForcastWeatherModel extends ForecastWeatherEntity {
   const ForcastWeatherModel({
     required super.dt,
     required super.temp,

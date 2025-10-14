@@ -17,3 +17,8 @@ class LoadForcastWeatherEvent extends WeatherEvent {
   final double lon;
   const LoadForcastWeatherEvent({required this.lat, required this.lon});
 }
+
+class LoadCitySuggestionEvent extends WeatherEvent {
+  final String prefix;
+  const LoadCitySuggestionEvent({required this.prefix});
+}

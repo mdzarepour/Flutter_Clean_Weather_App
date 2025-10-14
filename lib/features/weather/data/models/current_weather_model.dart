@@ -14,6 +14,7 @@ class CurrentWeatherModel extends CurrentWeatherEntity {
     required super.country,
     required super.weatherId,
     required super.cityName,
+    required super.icon,
   });
 
   factory CurrentWeatherModel.fromJson(Map<String, dynamic> map) {
@@ -30,6 +31,7 @@ class CurrentWeatherModel extends CurrentWeatherEntity {
       description: map['weather'][0]['description'] as String,
       country: map['sys']['country'] as String,
       cityName: map['name'] as String,
+      icon: map['weather'][0]['icon'],
     );
   }
 }

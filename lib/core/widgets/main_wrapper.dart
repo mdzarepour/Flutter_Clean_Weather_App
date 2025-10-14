@@ -14,27 +14,30 @@ class _MainWrapperState extends State<MainWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text('Weather App')),
-      body: SafeArea(
-        child: Center(
-          child: IndexedStack(
-            index: selectedPage,
-            children: [WeatherPage(), BookmarkPage()],
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(centerTitle: true, title: Text('Weather App')),
+        body: SafeArea(
+          child: Center(
+            child: IndexedStack(
+              index: selectedPage,
+              children: [WeatherPage(), BookmarkPage()],
+            ),
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: selectedPage,
-        onTap: (index) {
-          setState(() {
-            selectedPage = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.cloud), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: ''),
-        ],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: selectedPage,
+          onTap: (index) {
+            setState(() {
+              selectedPage = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.cloud), label: ''),
+            BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: ''),
+          ],
+        ),
       ),
     );
   }

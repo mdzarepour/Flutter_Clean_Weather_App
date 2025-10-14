@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/core/theme/app_text_theme.dart';
+import 'package:weather_app/core/utils/theme/app_text_theme.dart';
 
 class InfoWidget extends StatelessWidget {
   final String title;
@@ -22,7 +22,7 @@ class InfoWidget extends StatelessWidget {
         spacing: 10,
         children: [
           Text(style: AppTextTheme.grey15medium, title),
-          Icon(size: 35, icon),
+          Icon(icon, size: 35),
           Text(style: AppTextTheme.white15medium, value),
         ],
       ),

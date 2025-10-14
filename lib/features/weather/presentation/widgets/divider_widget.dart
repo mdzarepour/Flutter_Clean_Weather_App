@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/core/constants/const_colors.dart';
+import 'package:weather_app/core/utils/constants/const_colors.dart';
 
 class DividerWidget extends StatelessWidget {
   const DividerWidget({super.key});

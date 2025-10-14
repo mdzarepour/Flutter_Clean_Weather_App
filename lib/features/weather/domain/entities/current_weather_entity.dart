@@ -15,8 +15,10 @@ class CurrentWeatherEntity extends Equatable {
   final String cityName;
   final String main;
   final String description;
+  final String icon;
 
   const CurrentWeatherEntity({
+    required this.icon,
     required this.description,
     required this.main,
     required this.feelsLike,

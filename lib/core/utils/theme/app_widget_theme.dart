@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/core/constants/const_colors.dart';
+import 'package:weather_app/core/utils/constants/const_colors.dart';
 
 class AppWidgetTheme {
   //outlined button theme -->
@@ -48,5 +48,7 @@ class AppWidgetTheme {
       letterSpacing: 2.5,
     ),
   );
-  // text themes -->
+  static ProgressIndicatorThemeData indicatorTheme = ProgressIndicatorThemeData(
+    color: ConstantColors.materialSecondGrey,
+  );
 }

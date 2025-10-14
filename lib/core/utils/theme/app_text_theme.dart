@@ -1,4 +1,4 @@
-import 'package:weather_app/core/constants/const_colors.dart';
+import 'package:weather_app/core/utils/constants/const_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTextTheme {

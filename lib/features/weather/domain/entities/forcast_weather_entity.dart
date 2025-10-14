@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-class ForcastWeatherEntity extends Equatable {
+class ForecastWeatherEntity extends Equatable {
   final DateTime dt;
   final double temp;
   final String icon;
   final String main;
   final String description;
 
-  const ForcastWeatherEntity({
+  const ForecastWeatherEntity({
     required this.dt,
     required this.temp,
     required this.icon,
