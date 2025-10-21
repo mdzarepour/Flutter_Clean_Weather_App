@@ -1,16 +1,36 @@
-# weather_app
+# Weather App - Flutter (Clean Architecture)
 
-A new Flutter project.
+This is a simple weather app built with Flutter, following Clean Architecture principles. It uses BLoC for state management and fetches real-time weather data from the OpenWeatherMap API.
+<br>
+<br>
+<p align="left">
+<img width="300"  alt="Screenshot_1752949100" src="Screenshot_1761038024" src="https://github.com/user-attachments/assets/22a3be88-ba00-43a3-94e4-7ff38d83f18b" />
+<img width="300"  alt="Screenshot_1752949100" src="Screenshot_1761038024" src="https://github.com/user-attachments/assets/f4433da1-934a-4d8a-a625-cfdac6f6efea" />
+<img width="300"  alt="Screenshot_1752949100" src="Screenshot_1761038024" src="https://github.com/user-attachments/assets/b049bb2d-074e-4004-bc83-71c589d00716" />
+</p>
+## how to test ?
+add remote or download source then :
 
-## Getting Started
+```bash
+flutter pub get
+```
+```bash
+flutter pub upgrade
+```
+```bash
+flutter run
+```
 
-This project is a starting point for a Flutter application.
+<hr>
 
-A few resources to get you started if this is your first Flutter project:
+used package in MovieApp :
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+*  Google Fonts :  `google_fonts: ^6.2.1`
+*  Flutter Typeahead : `flutter_typeahead: ^5.2.0`
+*  Intl : `intl: ^0.20.2`
+*  Get it : `get_it: ^8.2.0`
+*  Fp Dart : `fpdart: ^1.1.1`
+*  Bloc : `bloc: ^9.0.1`
+*  Dio : `dio: ^5.9.0`
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
