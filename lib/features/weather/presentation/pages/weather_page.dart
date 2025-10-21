@@ -24,27 +24,179 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<WeatherPage> {
-  final LoadCitySuggestionUsecase loadCitySuggestionUsecase =
-      LoadCitySuggestionUsecase(weatherRepository: locator());
+  bool isBookmarked = false;
+  final LoadCitySuggestionUsecase loadCitySuggestionUsecase = locator.get();
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(height: 25),
           _buildSearchUi(context),
           _buildCurrentWeatherUi(),
           _buildForecastWeatherUi(),
-          Spacer(),
         ],
       ),
     );
   }
 
-  Container _buildSearchUi(BuildContext context) {
+  Widget _buildForecastWeatherUi() {
+    return BlocBuilder<WeatherBloc, WeatherState>(
+      builder: (context, state) {
+        final status = state.forecastWeatherStatus;
+        if (status is FwLoadingStatus) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (status is FwFailedStatus) {
+          return Center(
+            child: Text(status.errorMessage, style: AppTextTheme.white15medium),
+          );
+        }
+        if (status is FwSuccesStatus) {
+          final List<ForecastWeatherEntity> forecastWeatherList =
+              status.forecastWeatherList;
+          return Expanded(
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: forecastWeatherList.length,
+              itemBuilder: (context, index) {
+                return ForecastWidget(
+                  title: getDayOfWeek(forecastWeatherList[index].dt),
+                  value: getTimeOfDay(forecastWeatherList[index].dt),
+                  iconPath: getIconPath(forecastWeatherList[index].icon),
+                );
+              },
+            ),
+          );
+        }
+        return SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget _buildCurrentWeatherUi() {
+    return BlocBuilder<WeatherBloc, WeatherState>(
+      builder: (context, state) {
+        final status = state.currentWeatherStatus;
+        if (status is CwInitialStatus) {
+          return Column(
+            spacing: 10,
+            children: [
+              Icon(Icons.place),
+              Text(
+                style: AppTextTheme.white15medium,
+                'please search city first ..',
+              ),
+            ],
+          );
+        }
+        if (status is CwLoadingStatus) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (status is CwFailedStatus) {
+          return Center(
+            child: Text(
+              maxLines: 3,
+              textAlign: TextAlign.center,
+              status.errorMessage,
+              style: AppTextTheme.white15medium,
+            ),
+          );
+        }
+        if (status is CwSuccessStatus) {
+          final currentWeatherEntity = status.currentWeatherEntity;
+          return Column(
+            children: [
+              const SizedBox(height: 20),
+              Row(
+                spacing: 30,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      Text(
+                        currentWeatherEntity.cityName,
+                        textAlign: TextAlign.center,
+                        style: AppTextTheme.white25bold,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        currentWeatherEntity.description,
+                        textAlign: TextAlign.center,
+                        style: AppTextTheme.grey20medium,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(getIconPath(currentWeatherEntity.icon)),
+                  const SizedBox(width: 20),
+                  Text(
+                    currentWeatherEntity.temp.toStringAsFixed(2),
+                    textAlign: TextAlign.center,
+                    style: AppTextTheme.white50bold,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                spacing: 20,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TempWidget(
+                    title: 'max',
+                    temp: currentWeatherEntity.tempMax.toStringAsFixed(2),
+                  ),
+                  Container(
+                    width: 1,
+                    height: 50,
+                    color: ConstantColors.materialSecondGrey,
+                  ),
+                  TempWidget(
+                    title: 'min',
+                    temp: currentWeatherEntity.tempMin.toStringAsFixed(2),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 35),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InfoWidget(
+                    title: 'humidity',
+                    value: currentWeatherEntity.humidity.toStringAsFixed(2),
+                    icon: Icons.water_drop,
+                  ),
+                  InfoWidget(
+                    title: 'wind speed',
+                    value: currentWeatherEntity.windSpeed.toStringAsFixed(2),
+                    icon: Icons.wind_power,
+                  ),
+                  InfoWidget(
+                    title: 'feels like',
+                    value: currentWeatherEntity.feelsLike.toStringAsFixed(2),
+                    icon: Icons.beach_access,
+                  ),
+                ],
+              ),
+            ],
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget _buildSearchUi(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(top: 20),
       decoration: const BoxDecoration(
         color: ConstantColors.materialFirstGrey,
         borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -82,144 +234,6 @@ class _WeatherPageState extends State<WeatherPage> {
           context.read<WeatherBloc>().add(
             LoadForcastWeatherEvent(lat: city.lat, lon: city.lon),
           );
-        },
-      ),
-    );
-  }
-
-  Widget _buildCurrentWeatherUi() {
-    return Expanded(
-      flex: 10,
-      child: BlocBuilder<WeatherBloc, WeatherState>(
-        builder: (context, state) {
-          final status = state.currentWeatherStatus;
-          if (status is CwInitialStatus) {
-            return Center(
-              child: Column(
-                spacing: 20,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Text('please search your city'), Icon(Icons.place)],
-              ),
-            );
-          }
-          if (status is CwLoadingStatus) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (status is CwFailedStatus) {
-            return Center(
-              child: Text(status.errorMessage, style: AppTextTheme.white25bold),
-            );
-          }
-          if (status is CwSuccessStatus) {
-            final currentWeatherEntity = status.currentWeatherEntity;
-            return Column(
-              children: [
-                const SizedBox(height: 20),
-                const SizedBox(height: 20),
-                Text(
-                  currentWeatherEntity.cityName,
-                  textAlign: TextAlign.center,
-                  style: AppTextTheme.white25bold,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  currentWeatherEntity.description,
-                  textAlign: TextAlign.center,
-                  style: AppTextTheme.grey20medium,
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(getIconPath(currentWeatherEntity.icon)),
-                    const SizedBox(width: 20),
-                    Text(
-                      currentWeatherEntity.temp.toStringAsFixed(2),
-                      textAlign: TextAlign.center,
-                      style: AppTextTheme.white50bold,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  spacing: 20,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TempWidget(
-                      title: 'max',
-                      temp: currentWeatherEntity.tempMax.toStringAsFixed(2),
-                    ),
-                    Container(
-                      width: 1,
-                      height: 50,
-                      color: ConstantColors.materialSecondGrey,
-                    ),
-                    TempWidget(
-                      title: 'min',
-                      temp: currentWeatherEntity.tempMin.toStringAsFixed(2),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 35),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InfoWidget(
-                      title: 'humidity',
-                      value: currentWeatherEntity.humidity.toStringAsFixed(2),
-                      icon: Icons.water_drop,
-                    ),
-                    InfoWidget(
-                      title: 'wind speed',
-                      value: currentWeatherEntity.windSpeed.toStringAsFixed(2),
-                      icon: Icons.wind_power,
-                    ),
-                    InfoWidget(
-                      title: 'feels like',
-                      value: currentWeatherEntity.feelsLike.toStringAsFixed(2),
-                      icon: Icons.beach_access,
-                    ),
-                  ],
-                ),
-              ],
-            );
-          }
-          return const SizedBox.shrink();
-        },
-      ),
-    );
-  }
-
-  Widget _buildForecastWeatherUi() {
-    return Expanded(
-      flex: 2,
-      child: BlocBuilder<WeatherBloc, WeatherState>(
-        builder: (context, state) {
-          final status = state.forecastWeatherStatus;
-          if (status is FwLoadingStatus) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (status is FwFailedStatus) {
-            return Center(
-              child: Text(status.errorMessage, style: AppTextTheme.white25bold),
-            );
-          }
-          if (status is FwSuccesStatus) {
-            final List<ForecastWeatherEntity> forecastWeatherList =
-                status.forecastWeatherList;
-            return ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: forecastWeatherList.length,
-              itemBuilder: (context, index) {
-                return ForecastWidget(
-                  title: getDayOfWeek(forecastWeatherList[index].dt),
-                  value: getTimeOfDay(forecastWeatherList[index].dt),
-                  iconPath: getIconPath(forecastWeatherList[index].icon),
-                );
-              },
-            );
-          }
-          return SizedBox.shrink();
         },
       ),
     );

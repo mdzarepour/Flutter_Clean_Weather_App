@@ -10,16 +10,18 @@ class CurrentWeatherModel extends CurrentWeatherEntity {
     required super.tempMin,
     required super.humidity,
     required super.windSpeed,
-    required super.cityId,
+    required super.id,
     required super.country,
     required super.weatherId,
     required super.cityName,
     required super.icon,
+    required super.lat,
+    required super.lon,
   });
 
   factory CurrentWeatherModel.fromJson(Map<String, dynamic> map) {
     return CurrentWeatherModel(
-      cityId: map['id'] as int,
+      id: (map['id'] as int),
       weatherId: (map['weather'][0]['id'] as int),
       temp: (map['main']['temp'] as num).toDouble(),
       feelsLike: (map['main']['feels_like'] as num).toDouble(),
@@ -32,6 +34,28 @@ class CurrentWeatherModel extends CurrentWeatherEntity {
       country: map['sys']['country'] as String,
       cityName: map['name'] as String,
       icon: map['weather'][0]['icon'],
+      lat: (map['coord']['lat'] as num).toDouble(),
+      lon: (map['coord']['lon'] as num).toDouble(),
+    );
+  }
+
+  CurrentWeatherEntity toEntity() {
+    return CurrentWeatherEntity(
+      icon: icon,
+      description: description,
+      main: main,
+      feelsLike: feelsLike,
+      temp: temp,
+      tempMax: tempMax,
+      tempMin: tempMin,
+      humidity: humidity,
+      windSpeed: windSpeed,
+      id: id,
+      country: country,
+      weatherId: weatherId,
+      cityName: cityName,
+      lat: lat,
+      lon: lon,
     );
   }
 }

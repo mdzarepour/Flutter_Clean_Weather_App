@@ -2,17 +2,16 @@ import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:weather_app/core/utils/errors/network_exeption.dart';
 import 'package:weather_app/features/weather/data/datasources/weater_datasource.dart';
-import 'package:weather_app/features/weather/data/models/city_model.dart';
+import 'package:weather_app/features/weather/data/models/suggestion_city_model.dart';
 import 'package:weather_app/features/weather/data/models/current_weather_model.dart';
 import 'package:weather_app/features/weather/data/models/forcast_weather_model.dart';
-import 'package:weather_app/features/weather/domain/entities/city_entity.dart';
+import 'package:weather_app/features/weather/domain/entities/suggestion_city_entity.dart';
 import 'package:weather_app/features/weather/domain/entities/current_weather_entity.dart';
 import 'package:weather_app/features/weather/domain/entities/forcast_weather_entity.dart';
 import 'package:weather_app/features/weather/domain/repository/weather_repository.dart';
 
 class WeatherRepositoryImp implements WeatherRepository {
   final WeatherDatasource weatherDatasource;
-
   WeatherRepositoryImp({required this.weatherDatasource});
 
   @override
@@ -25,9 +24,9 @@ class WeatherRepositoryImp implements WeatherRepository {
       );
 
       if (response.statusCode == 200) {
-        final CurrentWeatherEntity currentWeatherEntity =
+        final CurrentWeatherModel currentWeatherModel =
             CurrentWeatherModel.fromJson(response.data);
-        return right(currentWeatherEntity);
+        return right(currentWeatherModel.toEntity());
       } else {
         return left(
           NetworkExeption(
@@ -53,10 +52,9 @@ class WeatherRepositoryImp implements WeatherRepository {
         lon: lon,
       );
       if (response.statusCode == 200) {
-        final List<dynamic> list = response.data['list'];
-        final List<ForecastWeatherEntity> forecastList = list
+        final List<ForecastWeatherEntity> forecastList = response.data['list']
             .map<ForecastWeatherEntity>(
-              (item) => ForcastWeatherModel.fromJson(map: item),
+              (e) => ForcastWeatherModel.fromJson(map: e).toEntity(),
             )
             .toList();
         return right(forecastList);
@@ -77,18 +75,22 @@ class WeatherRepositoryImp implements WeatherRepository {
   }
 
   @override
-  Future<List<CityEntity>> loadCitySuggestion({required String prefix}) async {
+  Future<List<SuggestionCityEntity>> loadCitySuggestion({
+    required String prefix,
+  }) async {
     try {
       final Response response = await weatherDatasource.loadCitySuggestion(
         prefix: prefix,
       );
-
       if (response.statusCode == 200) {
         final List<dynamic> dataList = response.data['data'];
-        final List<CityEntity> cityList = dataList
-            .map((e) => CityModel.fromJson(e as Map<String, dynamic>))
+        final List<SuggestionCityEntity> cityList = dataList
+            .map(
+              (e) => SuggestionCityModel.fromJson(
+                e as Map<String, dynamic>,
+              ).toEntity(),
+            )
             .toList();
-        print(cityList.length);
         return cityList;
       } else {
         throw NetworkExeption(
@@ -98,7 +100,7 @@ class WeatherRepositoryImp implements WeatherRepository {
         );
       }
     } on NetworkExeption catch (e) {
-      throw NetworkExeption(e.toString(), 'weather_repository_imp.dart');
+      throw e.message!;
     } catch (e) {
       throw NetworkExeption(e.toString(), 'weather_repository_imp.dart');
     }

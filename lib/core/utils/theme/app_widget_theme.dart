@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/core/utils/constants/const_colors.dart';
 
 class AppWidgetTheme {
+  static TextButtonThemeData textButtonTheme = TextButtonThemeData(
+    style: TextButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.circular(15),
+      ),
+      backgroundColor: ConstantColors.materialFirstGrey,
+    ),
+  );
   //outlined button theme -->
   static ButtonStyle outlinedButtonTheme = OutlinedButton.styleFrom(
     iconColor: ConstantColors.materialWhite,

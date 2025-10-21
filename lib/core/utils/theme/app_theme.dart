@@ -9,6 +9,7 @@ class AppTheme {
     splashColor: Colors.transparent,
     highlightColor: Colors.transparent,
     iconTheme: AppWidgetTheme.iconTheme,
+    textButtonTheme: AppWidgetTheme.textButtonTheme,
     inputDecorationTheme: AppWidgetTheme.inputDecorationTheme,
     bottomNavigationBarTheme: AppWidgetTheme.bottomNavigatorThemeData,
     colorScheme: const ColorScheme.dark(

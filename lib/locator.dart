@@ -14,7 +14,6 @@ setupLocator() async {
   locator.registerSingleton<Dio>(
     Dio(BaseOptions(baseUrl: 'https://api.openweathermap.org/data/2.5/')),
   );
-
   // datasources -->
   locator.registerLazySingleton<WeatherDatasource>(
     () => WeatherDatasourceImp(dio: locator()),
@@ -32,7 +31,7 @@ setupLocator() async {
   locator.registerLazySingleton<LoadForcastWeatherUsecase>(
     () => LoadForcastWeatherUsecase(weatherRepository: locator.get()),
   );
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<LoadCitySuggestionUsecase>(
     () => LoadCitySuggestionUsecase(weatherRepository: locator.get()),
   );
 
@@ -41,7 +40,6 @@ setupLocator() async {
     () => WeatherBloc(
       loadCurrentWeatherUsecase: locator(),
       loadForcastWeatherUsecase: locator.get(),
-      loadCitySuggestionUsecase: locator.get(),
     ),
   );
 }

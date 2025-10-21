@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/features/weather/presentation/pages/bookmark_page.dart';
 import 'package:weather_app/features/weather/presentation/pages/weather_page.dart';
 
 class MainWrapper extends StatefulWidget {
@@ -20,10 +19,7 @@ class _MainWrapperState extends State<MainWrapper> {
         appBar: AppBar(centerTitle: true, title: Text('Weather App')),
         body: SafeArea(
           child: Center(
-            child: IndexedStack(
-              index: selectedPage,
-              children: [WeatherPage(), BookmarkPage()],
-            ),
+            child: IndexedStack(index: selectedPage, children: [WeatherPage()]),
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(

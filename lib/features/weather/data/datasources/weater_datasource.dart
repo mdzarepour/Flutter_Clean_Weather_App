@@ -13,7 +13,6 @@ abstract interface class WeatherDatasource {
 
 class WeatherDatasourceImp implements WeatherDatasource {
   final Dio dio;
-
   WeatherDatasourceImp({required this.dio});
 
   @override
@@ -69,7 +68,6 @@ class WeatherDatasourceImp implements WeatherDatasource {
         "http://geodb-free-service.wirefreethought.com/v1/geo/cities",
         queryParameters: {'limit': 7, 'offset': 0, 'namePrefix': prefix},
       );
-      print(response.data);
       return response;
     } on DioException catch (e) {
       throw NetworkExeption(
